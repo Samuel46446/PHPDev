@@ -46,21 +46,50 @@ function displaySpecific($filePath, $num)
     }
 }
 
-function addMoney($num, $sum)
+function addMoney($filePath, $num, $sum)
 {
-    foreach ($this->tabCompte as &$compte) {
+    if (($handle = fopen($filePath, "w")) !== false) {
+        echo "Contenu du fichier CSV :\n";
+        while (($data = fgetcsv($handle, 1000, ";")) !== false) {
+            // $data est un tableau contenant les colonnes de la ligne actuelle
+            if($data[0] == $num)
+            {
+                $data[2]=$data[2]+$sum;
+                echo "Solde mis à jour : " . $data[2] . " €\n";
+            }
+        }
+        fclose($handle);
+    } else {
+        echo "Erreur : Impossible d'ouvrir le fichier pour lire.\n";
+    }
+    /*foreach ($this->tabCompte as &$compte) {
         if ($compte["N°"] == $num) {
             $compte["Solde"] += $sum;
             echo "Solde mis à jour : " . $compte["Solde"] . " €\n";
             return;
         }
     }
-    echo "Compte non trouvé.\n";
+    echo "Compte non trouvé.\n";*/
 }
 
 // Retirer du solde à un compte
-function withdrawMoney($num, $sum)
+function withdrawMoney($filePath, $num, $sum)
 {
+    if (($handle = fopen($filePath, mode: "w")) !== false) {
+        echo "Contenu du fichier CSV :\n";
+        while (($data = fgetcsv($handle, 1000, ";")) !== false) {
+            // $data est un tableau contenant les colonnes de la ligne actuelle
+            if($data[0] == $num)
+            {
+                $data[2]=$data[2]-$sum;
+                echo "Solde mis à jour : " . $data[2] . " €\n";
+            }
+        }
+        fclose($handle);
+    } else {
+        echo "Erreur : Impossible d'ouvrir le fichier pour lire.\n";
+    }
+    /*
     foreach ($this->tabCompte as &$compte) {
         if ($compte["N°"] == $num) {
             if ($compte["Solde"] >= $sum) {
@@ -72,7 +101,27 @@ function withdrawMoney($num, $sum)
             return;
         }
     }
-    echo "Compte non trouvé.\n";
+    echo "Compte non trouvé.\n";*/
+}
+
+function deleteAccount($filePath, $num)
+{
+    if (($handle = fopen($filePath, mode: "a")) !== false) {
+        echo "Contenu du fichier CSV :\n";
+        while (($data = fgetcsv($handle, 1000, ";")) !== false) {
+            // $data est un tableau contenant les colonnes de la ligne actuelle
+            if($data[0] == $num)
+            {
+                $data[0] = [""];
+                $data[1] = [""];
+                $data[2] = [""];
+                $data[3] = [""];
+            }
+        }
+        fclose($handle);
+    } else {
+        echo "Erreur : Impossible d'ouvrir le fichier pour lire.\n";
+    }
 }
 
 $filePath = "banqueAccount.csv";
@@ -96,26 +145,20 @@ do
         case 1:
             echo "Entrer le numéro du compte : ";
             $num = trim(fgets(STDIN));
-            foreach ($this->tabCompte as $compte) {
-                if ($compte["N°"] == $num) {
-                    echo "Le numéro de compte existe déjà. Veuillez réessayer.\n";
-                    continue 2;
-                }
-            }
             echo "Entrer le nom : ";
             $nom = trim(fgets(STDIN));
             echo "Entrer le prénom : ";
             $prenom = trim(fgets(STDIN));
             echo "Entrer le solde : ";
             $solde = trim(fgets(STDIN));
-            $this->add($num, $nom, $prenom, $solde);
+            add($filePath,$num, $nom, $prenom, $solde);
             echo "Compte ajouté avec succès.\n";
             break;
 
         case 2:
             echo "Entrer le numéro du compte à supprimer : ";
             $num = trim(fgets(STDIN));
-            $this->deleteAccount($num);
+            deleteAccount($filePath, $num);
             break;
 
         case 3:
@@ -123,7 +166,7 @@ do
             $num = trim(fgets(STDIN));
             echo "Entrer la somme à ajouter : ";
             $sum = (float) trim(fgets(STDIN));
-            $this->addMoney($num, $sum);
+            addMoney($filePath, $num, $sum);
             break;
 
         case 4:
@@ -131,7 +174,7 @@ do
             $num = trim(fgets(STDIN));
             echo "Entrer la somme à retirer : ";
             $sum = (float) trim(fgets(STDIN));
-            $this->withdrawMoney($num, $sum);
+            withdrawMoney($filePath,$num, $sum);
             break;
 
         case 5:
@@ -163,6 +206,6 @@ $solde = trim(fgets(STDIN));
 add($filePath, $num, $nom, $prenom, $solde);
 
 // Afficher le contenu du fichier
-display($filePath);
+displayAll($filePath);
 
 ?>
