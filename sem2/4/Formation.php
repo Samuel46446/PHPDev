@@ -18,9 +18,28 @@ class Formation
         $this->sessions = [];
     }
 
+    public function affectSessions(Session $session): void
+    {
+        $this->sessions[] = $session;
+    }
+
     public function affectParticipants(): void
     {
-        $choix = -1;
+        for($i = 0; $i < count($this->registred); $i++)
+        {
+            for($j = 0; $j < count($this->sessions); $j++)
+            {
+                echo "Entrez le nom, le prenom et l'age du participant : \n";
+                $name = trim(string: fgets(STDIN));
+                $surname = trim(fgets(STDIN));
+                $oldest = trim(fgets(STDIN));
+                $this->registred[$i]->getSessionChoice($j)->addParticipant(new Participant($name, $surname, $oldest, new Session()));
+                break;
+            }
+        }
+
+
+        /*$choix = -1;
         do {
             $choix = trim(fgets(STDIN));
             echo "Bienvennue dans Formation : \n";
@@ -35,13 +54,6 @@ class Formation
                 case 1: // Affecter les participants
                     $m = 'O';
                     do {
-                        echo "Entrez le nom, le prenom et l'age du participant : \n";
-                        $name = trim(fgets(STDIN));
-                        $surname = trim(fgets(STDIN));
-                        $oldest = trim(fgets(STDIN));
-                        $this->registred[] = new Participant($name, $surname, $oldest, new Session());
-                        echo "Voulez vous affecter un participant ? (O/N) \n";
-                        $m = trim(fgets(stream: STDIN));
                     } while($m != 'N');
                     break;
                 case 2: // Affecter les sessions
@@ -104,7 +116,7 @@ class Formation
                     echo "Au revoir ! \n";
                     break;
             }
-        } while($choix != 6);
+        } while($choix != 6);*/
     }
 
     public function getCode(): string
