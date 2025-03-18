@@ -5,27 +5,28 @@ class TStation
     private string $name;
     private int $nbReservoirs = 0;
     private array $reservoirs;
-    private array $reservoirsOf;
 
-    public function __construct(string $name, int $quantity, string... $reservoirTypes)
+    public function __construct(string $name)
     {
-        $this->reservoirsOf = [];
-        $this->reservoirs = [
-            new TReservoir("super", $quantity, $quantity), 
-            new TReservoir("sp95", $quantity, $quantity), 
-            new TReservoir("sp98", $quantity, $quantity), 
-            new TReservoir("gazole", $quantity, $quantity)];
+        $this->reservoirs = [];
         $this->name = $name;
-        for($i = 0; $i < count($reservoirTypes); $i++)
+    }
+
+    public function addReservoir(TReservoir& $reserv) : void
+    {
+        if(!$reserv->getEstUtilise())
         {
-            for($k = 0; $k < count($this->reservoirs); $k++)
-            {
-                if($reservoirTypes[$i] == $this->reservoirs[$k]->getCarburant())
-                {
-                    $this->reservoirsOf[$i] = $this->reservoirs[$k];
-                    $this->nbReservoirs = $this->nbReservoirs + 1;
-                }
-            }
+            $this->reservoirs[] = $reserv;
+            $this->nbReservoirs += 1;
+            $reserv->setEstUtilise(true);
+        }
+    }
+
+    public function displayReservoirs(): void
+    {
+        for($i = 0; $i < count($this->reservoirs); $i++)
+        {
+            echo $this->reservoirs[$i]->getCarburant() . " : " . $this->reservoirs[$i]->getVolumeRestant() . " litres\n";
         }
     }
 
@@ -36,11 +37,11 @@ class TStation
 
     public function getBesoin(string $carburant): int
     {
-        for($i = 0; $i < count($this->reservoirsOf); $i++)
+        for($i = 0; $i < count($this->reservoirs); $i++)
         {
-            if($this->reservoirsOf[$i]->getCarburant() == $carburant)
+            if($this->reservoirs[$i]->getCarburant() == $carburant)
             {
-                return $this->reservoirsOf[$i]->getVolumeRestant();
+                return $this->reservoirs[$i]->getVolumeBesoin();
             }
         }
         return 0;

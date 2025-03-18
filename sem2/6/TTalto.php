@@ -7,48 +7,74 @@ class TTalto
     private array $mesReservoirs;
     private array $mesStations;
 
-    public function __construct(int $nbCarburant = 10000)
+    public function __construct()
     {
-        $this->nbCarburant = $nbCarburant;
+        $this->nbCarburant = 0;
         $this->mesStations = [];
-        $this->mesReservoirs = [        
-            new TReservoir("super", $nbCarburant, $nbCarburant), 
-            new TReservoir("sp95", $nbCarburant, $nbCarburant), 
-            new TReservoir("sp98", $nbCarburant, $nbCarburant), 
-            new TReservoir("gazole", $nbCarburant, $nbCarburant)];
+        $this->mesReservoirs = [];
         echo "TTalto init !\n";
     }
 
-    public function addStation(TStation $station)
+    public function getNbCarburant(): int
+    {
+        return $this->nbCarburant;
+    }
+
+    public function addReservoir(TReservoir& $reserv) : void
+    {
+        if(!$reserv->getEstUtilise())
+        {
+            $this->mesReservoirs[] = $reserv;
+            $this->nbCarburant += 1;
+            $reserv->setEstUtilise(true);
+        }
+    }
+
+    public function getMesReservoirs(): array
+    {
+        return $this->mesReservoirs;
+    }
+
+    public function getMesStations(): array
+    {
+        return $this->mesStations;
+    }
+
+    public function addStation(TStation $station): void
     {
         $this->mesStations[] = $station;
     }
 
-    public function getNbStations()
+    public function getNbStations(): int
     {
         return count($this->mesStations);
     }
 
-    public function getStation(int $i): TStation
+    public function getNbReservoirs(): int
     {
-        if($this->mesStations[$i] != null)
-        {
-            return $this->mesStations[$i];
-        }
-        else
-        {
-            echo "Station non trouvée, Une station par défaut est chargé\n";
-            return new TStation("null", 0, 0);
-        }
+        return count($this->mesReservoirs);
     }
 
-    public function livrer(string $carburant, int $volume)
+    public function getStation(int $i): TStation | null
+    {
+        if($i < $this->getNbStations() && $i >= 0)
+        {
+            if($this->mesStations[$i] != null)
+            {
+                return $this->mesStations[$i];
+            }
+        }
+        return null;
+    }
+
+    public function livrer(string $carburant, int $volume): void
     {
         for($i = 0; $i < count($this->mesReservoirs); $i++)
         {
             if($this->mesReservoirs[$i]->getCarburant() == $carburant)
             {
-                $this->mesReservoirs[$i]->changeVolume($volume*-1);
+                $this->mesReservoirs[$i]->changeVolume(-$volume);
+                break;
             }
         }
     }

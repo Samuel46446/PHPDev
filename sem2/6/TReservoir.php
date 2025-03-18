@@ -5,6 +5,7 @@ class TReservoir
     private string $carburant;
     private int $capacite;
     private int $volumeRestant;
+    private bool $estUtilise;
 
     public static string $C_SUPER = "super";
     public static string $C_SP95 = "sp95";
@@ -13,6 +14,7 @@ class TReservoir
 
     public function __construct(string $carburant, int $capacite, int $volumeRestant)
     {
+        $this->estUtilise = false;
         if($carburant == "super" || $carburant == "sp95" || 
         $carburant == "sp98" || $carburant == "gazole")
         {
@@ -35,7 +37,16 @@ class TReservoir
         {
             $this->volumeRestant = $volumeRestant;
         }
-        $this->volumeRestant = $volumeRestant;
+    }
+
+    public function getEstUtilise() : bool
+    {
+        return $this->estUtilise;
+    }
+
+    public function setEstUtilise(bool $b) : void
+    {
+        $this->estUtilise = $b;
     }
 
     public function getCarburant(): string
@@ -43,7 +54,7 @@ class TReservoir
         return $this->carburant;
     }
 
-    public function changeVolume(int $value)
+    public function changeVolume(int $value) : void
     {
         if($this->volumeRestant + $value >= 0 && $this->volumeRestant + $value <= $this->capacite)
         {
@@ -55,22 +66,18 @@ class TReservoir
         }
     }
 
-    public function getVolumeBesoin()
+    public function getVolumeBesoin() : int
     {
         $percent = $this->capacite * 0.2;
         
         if($this->volumeRestant < $percent)
         {
-            $this->volumeRestant = $this->capacite;
-            echo "Réapprovisionnement effectué\n";
+            return $this->capacite - $this->volumeRestant;
         }
-        else
-        {
-            echo "Pas besoin de réapprovisionnement\n";
-        }
+        return 0;
     }
 
-    public function getVolumeRestant()
+    public function getVolumeRestant() : int
     {
         return $this->volumeRestant;
     }

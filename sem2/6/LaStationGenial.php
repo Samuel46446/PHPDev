@@ -20,7 +20,7 @@ $reservoirSuper->changeVolume(200); // Ajoute 200 litres
 echo "Nouveau volume restant: " . $reservoirSuper->getVolumeRestant() . " litres\n";
 
 // Vérification du besoin de réapprovisionnement
-$reservoirSuper->getVolumeBesoin();
+echo "getVolumeBesoin sur le réservoir Super" . $reservoirSuper->getVolumeBesoin();
 
 echo "\n";
 
@@ -29,6 +29,12 @@ echo "=== Exemple 2 : Utilisation de la classe TTalto ===\n";
 
 // Création d'une instance de TTalto
 $ttalto = new TTalto();
+
+$taltoReser1 = new TReservoir(TReservoir::$C_SUPER, 1000, 500);
+$taltoReser2 = new TReservoir(TReservoir::$C_GAZOLE, 1000, 0);
+$ttalto->addReservoir($taltoReser1);
+$ttalto->addReservoir($taltoReser2);
+// $ttalto->getStation(1)->addReservoir("sp98", 1000, 500); !
 
 // Livraison de 500 litres de super
 $ttalto->livrer(TReservoir::$C_SUPER, 500);
@@ -45,7 +51,22 @@ echo "\n";
 echo "=== Exemple 3 : Création et utilisation d'une station ===\n";
 
 // Création d'une station avec des réservoirs de super et de gazole
-$stationA = new TStation("Station A", 300, TReservoir::$C_SUPER, TReservoir::$C_GAZOLE);
+$stationA = new TStation("Station A");
+
+$reservSA1 = new TReservoir(TReservoir::$C_SUPER, 1000, 500);
+$reservSA2 = new TReservoir(TReservoir::$C_GAZOLE, 1000, 500);
+
+echo "Add Reservoir to station A:\n";
+
+$stationA->addReservoir($reservSA1);
+$stationA->addReservoir($reservSA2);
+
+$stationA->displayReservoirs();
+echo "Add Reservoir incorrect to station A:\n";
+
+$stationA->addReservoir($reservSA1); // ! ne marche pas
+
+$stationA->displayReservoirs();
 
 // Affichage du nom de la station
 echo "Nom de la station: " . $stationA->getName() . "\n";
@@ -77,7 +98,16 @@ echo "\n";
 echo "=== Exemple 5 : Interaction entre TTalto et TStation ===\n";
 
 // Création d'une deuxième station
-$stationB = new TStation("Station B", 500, TReservoir::$C_SP95, TReservoir::$C_SP98);
+$stationB = new TStation("Station B");
+
+$reservSB1 = new TReservoir(TReservoir::$C_SP95, 1000, 500);
+echo "Add Reservoir incorrect to station B:\n";
+
+$stationB->addReservoir($reservSB1);
+$stationB->addReservoir($reservSA1);
+$stationB->addReservoir($reservSA2);
+
+$stationB->displayReservoirs();
 
 // Ajout de la station B à TTalto
 $ttalto->addStation($stationB);
@@ -85,8 +115,9 @@ $ttalto->addStation($stationB);
 // Affichage du nombre de stations dans TTalto
 echo "Nombre de stations dans TTalto: " . $ttalto->getNbStations() . "\n";
 
+$ttalto->getMesReservoirs()[0]->changeVolume(1000);
 // Livraison de 1000 litres de super à TTalto
-$ttalto->livrer(TReservoir::$C_SUPER, 1000);
+$ttalto->livrer(TReservoir::$C_SUPER, 900);
 
 // Affichage du volume restant de super dans TTalto
 echo "Volume restant de super dans TTalto: " . $ttalto->reste(TReservoir::$C_SUPER) . " litres\n";
