@@ -1,9 +1,27 @@
+<?php
+include "Main.php";
+
+$tuto = $_GET['tuto'] != null ? $_GET['tuto'] : "Bloc";
+$setTuto = $_GET['tuto'] != null ? $_GET['tuto'] : "Bloc";
+$modLoader= $_GET['modloader'] != null ? $_GET['modloader'] : "forge";
+$setTuto1 = lcfirst($setTuto); //"bloc";
+
+$tabTuto = Main::getTutorialFromName($setTuto);
+$modLoaderID = Main::getLoaderIdByName($_GET['modloader'] != null ? $_GET['modloader'] : "forge");
+
+$icon = Main::getLogoLoaderById($modLoaderID);
+
+$tabComponents = Main::getComponentsByTutorialNameAndLoader($modLoaderID, $setTuto1);
+$tabMinecraftComponents = Main::getComponentsByTutorialNameAndLoader(4, $setTuto1);
+
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minecraft Modding Tutorial</title>
+    <title>Modding Tutorial - <?php echo $tabTuto['title']; ?></title>
+    <?php echo "<link rel=\"icon\" href=\"textures/" . $icon . ".png\" type=\"image/x-icon\">"; ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
@@ -15,10 +33,6 @@
        h2{
            color: #1FC946;
            margin-left: 20px;
-       }
-       .pInUl{
-           color: #F525E3;
-           margin-left: 80px;
        }
        p{
            color: #F525E3;
@@ -45,90 +59,112 @@
             .language-json {
                 border-radius: 10px;
             }
+            .version{
+                color: #F525E3;
+                display: flex;
+                justify-content: flex-end;
+                margin-right: 20px; /* Pousse l'élément vers la droite */
+            }
+       select {
+           background-color: #333;
+           color: white;
+           padding: 10px;
+           border: none;
+           border-radius: 5px;
+           margin-left: 20px;
+           margin-bottom: 20px;
+       }
    </style>
 </head>
 <body>
+<select name="modLoader" id="modloaders">
+    <option value="forge" <?= ($modLoader == "forge") ? "selected" : ""; ?>>
+        forge
+    </option>
+    <option value="fabric" <?= ($modLoader == "fabric") ? "selected" : ""; ?>>
+        fabric
+    </option>
+    <option value="neoforge" <?= ($modLoader == "neoforge") ? "selected" : ""; ?>>
+        neoforge
+    </option>
+</select><select name="tuto" id="tutos">
+    <?php
+    include_once "Tutorial.php";
+
+    $currentTuto = $_GET['tuto'] ?? "Bloc";
+
+    foreach (Tutorials::getTutorials() as $tuto) {
+        $selected = ($currentTuto === $tuto['title']) ? "selected" : "";
+        echo "<option value=\"" . htmlspecialchars($tuto['title']) . "\" " . $selected . ">" . htmlspecialchars($tuto['title']) . "</option>";
+    }
+    ?>
+</select>
+<script>
+    document.getElementById('modloaders').addEventListener('change', function() {
+        const params = new URLSearchParams(window.location.search);
+        params.set('modloader', this.value);
+        window.location.search = params.toString();
+    });
+
+    document.getElementById('tutos').addEventListener('change', function() {
+        const params = new URLSearchParams(window.location.search);
+        params.set('tuto', this.value);
+        window.location.search = params.toString();
+    });
+</script>
     <header>
-        <h1>Créé un bloc basic</h1>
-        <p>Les blocs son la base de Minecraft, dans ce tutoriel nous allons voir comment créer un bloc pour la fabric api.</p>
-
+        <h1 class="version"><?php echo "Version Tutoriel : " . $tabTuto['version']; ?></h1>
+        <h1><?php echo $tabTuto['about'];?></h1>
+        <p><?php echo $tabTuto['description']; ?>
+            <?php
+            if($_GET['modloader'] != null)
+            {
+                if($_GET['modloader'] == "fabric")
+                {
+                    echo "la fabric api";
+                }
+                else if($_GET['modloader'] == "neoforge")
+                {
+                    echo "l'api neoforge";
+                }
+                else
+                {
+                    echo "l'api forge";
+                }
+            }
+            else
+            {
+                echo "minecraft";
+            }
+            ?>.</p>
         <ul>
-            <h2>Code de base du bloc</h2>
+            <?php
 
-            <p>La classe de base pour la création de bloc est <b>Block</b> qui posséde
-                un seul arguments qu'on appelle <b>Settings</b> de la classe <b>AbstractBlock</b> !</p>
-                <p><pre><code class="language-java">//Création des Settings
-.of() //Necessaire dans la creation des paramètres
-.copy(AbstractBlock block) //Copie les paramètres d'un autre bloc (ex: .copy(Blocks.DIAMOND_BLOCK))
+            foreach ($tabComponents as $component) {
 
-//Après la création des Settings
-.strength(float hardness, float resistance)  //Pour la force du bloc, hardness le temps de casse pour le joueur et resistance pour la résistance au explosion par exemple
-.strength(float hardness) //Fait exactement la même chose que ci dessus mais ne necessite qu'un paramètre, la résistance et elle appliqué par défaut
-.requiresTool() //Le bloc doit être récupérer avec le bon outil (ex: Pioche pour la pierre)
-.sounds(BlockSoundGroup soundGroup) //Définis le son du bloc par défaut c'est celui de la roche
-.nonOpaque() //Définit le bloc comme transparent (La lumière passe à travers)
-.noCollision() //Définit que le bloc n'a pas de collision (utile pour les plantes)
-.breakInstantly() //Définit que le bloc se casse instant (ex: herbes ou torches)
-.dropsLike(Block source) //Définit un drop d'un autre bloc à la place (ex : torche mural drop une torche)
-.luminance(ToIntFunction<BlockState> luminance) //Définit la lumiére que le bloc emmet (ex: .luminance(state -> 15) pour la glowstone)</code></pre></li>
-            <pre><code class="language-java">
-public class ModBlocks {
+                if($component['cno'] == 'java' . $setTuto1 . '1')
+                {
+                    echo Main::getBaliseFromCno($component['cno'], $component['description'], $component['code'], $component['lno']);
+                }
+            }
 
-    //Create a new block
-    public static final Block EXAMPLE_BLOCK = new Block(AbstractBlock.Settings.of().hardness(4.0f).registryKey(RessourceKey.of(RessourceKeys.BLOCKS, Identifier.of("tutorial", "example_block"))));
+            foreach ($tabComponents as $component) {
 
-    public static void initBlocks()
-    {
-        //Register the block
-        Registry.register(Registries.BLOCK, Identifier.of("tutorial", "example_block"), EXAMPLE_BLOCK);
-        Registry.register(Registries.ITEM, Identifier.of("tutorial", "example_block"), new BlockItem(EXAMPLE_BLOCK, new Item.Settings().useBlockPrefixedTranslationKey()
-                .registryKey(RessourceKey.of(RessourceKeys.ITEMS, Identifier.of("tutorial", "example_block"))));
-    }
-}
-        </code></pre>
-        <pre><code class="language-java">
-public class TutorialMod implements ModInitializer {
+                if($component['cno'] != 'java'. $setTuto1 .'1')
+                {
+                    echo Main::getBaliseFromCno($component['cno'], $component['description'], $component['code'], $component['lno']);
+                }
+            }
+            ?>
 
-    public static final String MOD_ID = "tutorial";
+            <?php
 
-    public void onInitialize()
-    {
-            ModBlocks.initBlocks();
-            ItemGroupEvents.modifyEntriesEvent(ItemGroup.TAB_BUILDING_BLOCKS).register(content -> {
-                content.add(ModBlocks.EXAMPLE_BLOCK);
-            });
-    }
-}
-        </code></pre>
-            <p>Ne pas oublier de l'enregistrer dans la classe principale</p>
-
-
-            <h2>blockstates/example_block.json</h2>
-        <pre><code class="language-json">
-{
-  "variants": {
-    "": { "model": "tutorial:block/example_block" }
-  }
-}
-        </code></pre>
-        <h2>models/block/example_block.json</h2>
-        <pre><code class="language-json">
-{
-  "parent": "block/cube_all",
-  "textures": {
-    "all": "tutorial:block/example_block"
-  }
-}
-        </code></pre>
-        <h2>models/item/example_block.json</h2>
-        <pre><code class="language-json">
-{
-  "parent": "tutorial:block/example_block"
-}
-        </code></pre>
-        <h2>resources/assets/tutorial/textures/block/example_block.png</h2>
-        <img src="textures/example_block.png" alt="example_block" style="image-rendering: pixelated; width: 200px; height: 200px;">
-        </>
+            foreach ($tabMinecraftComponents as $component) {
+                echo Main::getBaliseFromCno($component['cno'], $component['description'], $component['code'], $component['lno']);
+            }
+            ?>
+        </ul>
+        <?php echo "<h2>" . $tabTuto['finaldesc'] . "</h2>"; //Cela nous donne un bloc tout rose ?>
         <div class="container">
             <div id="branding">
                 <h1>Autres :</h1>
@@ -136,12 +172,13 @@ public class TutorialMod implements ModInitializer {
             <nav>
                 <ul>
                     <li><a href="index.php">Home</a></li>
+                    <li><a href="index.php">DataGenerator</a></li>
                 </ul>
             </nav>
         </div>
     </header>
     <footer>
-        <p>&copy; 2023 Minecraft Modding Tutorial. All rights reserved.</p>
+        <p>&copy; 2025 Minecraft Modding Tutorial. All rights reserved.</p>
     </footer>
 </body>
-</html></footer></ul></div></ul></nav></div></body></html>
+</html>
