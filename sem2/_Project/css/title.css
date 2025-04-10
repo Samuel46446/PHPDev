@@ -4,3 +4,108 @@
     float: right;
     margin-right: 50px;
 }
+
+.createButton {
+    text-decoration: none;
+    cursor: pointer;
+    color : white;
+    background-color: darkorchid;
+    border-color: lavender;
+    border-radius: 5px;
+    padding: 10px 20px;
+    display: inline-block;
+    font-size: 16px;
+    font-family: Arial, sans-serif; /* Utiliser la même police que le bouton de base */
+    margin-left: 700px;
+}
+
+.deleteButton {
+    text-decoration: none;
+    cursor: pointer;
+    color : white;
+    background-color: red;
+    border-color: lavender;
+    border-radius: 5px;
+    padding: 10px 20px;
+    display: inline-block;
+    font-size: 16px;
+    font-family: Arial, sans-serif; /* Utiliser la même police que le bouton de base */
+    margin-left: 700px;
+}
+
+.modifyButton {
+    text-decoration: none;
+    cursor: pointer;
+    color : white;
+    background-color: aqua;
+    border-color: lavender;
+    border-radius: 5px;
+    padding: 10px 20px;
+    display: inline-block;
+    font-size: 16px;
+    font-family: Arial, sans-serif; /* Utiliser la même police que le bouton de base */
+    margin-left: 700px;
+}
+
+.selectButton {
+    text-decoration: none;
+    cursor: pointer;
+    color : white;
+    background-color: #38b33e;
+    border-color: lavender;
+    border-radius: 5px;
+    padding: 10px 20px;
+    display: inline-block;
+    font-size: 16px;
+    font-family: Arial, sans-serif; /* Utiliser la même police que le bouton de base */
+    margin-left: 700px;
+}
+
+.logButtons {
+    text-decoration: none;
+    cursor: pointer;
+    color : white;
+    background-color: #38b33e;
+    border-color: lavender;
+    border-radius: 5px;
+    padding: 10px 20px;
+    display: inline-block;
+    font-size: 16px;
+    font-family: Arial, sans-serif; /* Utiliser la même police que le bouton de base */
+    margin-left: 550px;
+}
+
+.ForumButton {
+    text-decoration: none;
+    cursor: pointer;
+    color : white;
+    background-color: #38b33e;
+    border-color: lavender;
+    border-radius: 5px;
+    padding: 10px 20px;
+    display: inline-block;
+    font-size: 16px;
+    font-family: Arial, sans-serif; /* Utiliser la même police que le bouton de base */
+    margin-left: 710px;
+}
+
+
+.home{
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    background-color: #bd31d3;
+}
+
+.titleIndex {
+    color: white;
+    align-content: center;
+    text-align: center;
+}
+
+body {
+    background-color: #0D1B2A;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 20px;
+}

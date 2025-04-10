@@ -6,35 +6,22 @@ if (!isset($_SESSION)) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!empty($_POST["username"]) && !empty($_POST["password"])) {
+    if (!empty($_POST["username"]) && !empty($_POST["password"]) &&
+    !empty($_POST["email"]) && !empty($_POST["phone"])) {
         $username = $_POST['username'];
         $password = $_POST['password'];
+        $email = $_POST['email'];
+        $phone = $_POST['phone'];
+        $_SESSION['sendingUserChanges'] = true;
 
-        $userFound = false;
+        $user = new User($username, $email, $password, $phone);
 
-        foreach (RegistryEntry::getUsers() as $user) {
-            if ($user['name'] === $username && $user['password'] === $password) {
-                // Utilisateur authentifié avec succès
-                $_SESSION['user_id'] = $user['uno'];
-                $_SESSION['username'] = $user['name'];
-                $_SESSION['user_mail'] = $user['email'];
-                $_SESSION['user_phone'] = $user['phone'];
-                $_SESSION['isCorrectLogged'] = true;
-
-                $userFound = true;
-                break;
-            }
-        }
-
-        if ($userFound) {
-            header("Location: LogIn.php?isLogged=true");
-            $_SESSION['isCorrectLogged'] = true;
-            exit();
-        } else {
-            $_SESSION['isCorrectLogged'] = false;
-            header("Location: LogIn.php?isLogged=false");
-            exit();
-        }
+        $id = AttributeFetcher::getUserIdByName($_SESSION['user_id']);
+        SwitchRegistry::updateUserToBDD($id, $user);
+    }
+    else
+    {
+        $_SESSION['sendingUserChanges'] = false;
     }
 }
 
@@ -87,27 +74,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </style>
 </head>
 <body>
-<h1>Forum - Modding Minecraft : Connexion</h1>
+<h1>Forum - Modding Minecraft : Update Tutorial</h1>
 
-<form action="LogIn.php" method="POST">
+<form action="UpdateUserData.php" method="POST">
     <?php
-    if (isset($_GET['isLogged'], $_SESSION['isCorrectLogged'])) {
-        if ($_GET['isLogged'] === 'true' && $_SESSION['isCorrectLogged']) {
-            echo "<p>✅ Vous êtes connecté, cliquez sur Home pour retourner à l'accueil.</p>";
+    if (isset($_SESSION['sendingUserChanges'])) {
+        if ($_SESSION['sendingUserChanges']) {
+            echo "<p>✅ Vous avez modifié votre profil.</p>";
             echo "<div class=\"home\"><a href=\"index.php\" class=\"button-link\"><img src=\"textures/home_button.png\" alt=\"Home\" width=\"50\" height=\"50\"></a></div>";
-        } else if ($_GET['isLogged'] === 'false') {
-            echo "<p>❌ L'utilisateur ou le mot de passe est incorrect ou inexistant, veuillez réessayer.</p>";
-            echo "<a href=\"LogIn.php\">Réessayer</a>";
+            echo "<div class=\"home\"><a href=\"UpdateUserData.php\" class=\"button-link\"><img src=\"textures/components.png\" alt=\"Home\" width=\"50\" height=\"50\"></a></div>";
+        } else if ($_GET['sendingUserChanges'] === false) {
+            echo "<p>❌ Le profil n'a pas pu être modifié, veuillez réessayer.</p>";
+            echo "<a href=\"UpdateUserData.php\">Réessayer</a>";
         }
     } else {
         ?>
         <label>
-            <input type="text" name="username" placeholder="Nom d'utilisateur" required>
+            <p>Nom d'utilisateur : <?php echo $_SESSION['username']; ?></p>
         </label>
         <label>
-            <input type="password" name="password" placeholder="Mot de passe" required>
+            <input type="text" name="username" placeholder="Nouveau Nom d'utilisateur" required>
         </label>
-        <button type="submit">Se connecter</button>
+        <label>
+            <input type="password" name="password" placeholder="Nouveau mot de passe" required>
+        </label>
+        <label>
+            <input type="email" name="email" placeholder="Nouvelle email" required>
+        </label>
+        <label>
+            <input type="text" name="phone" placeholder="Nouveau numéro de téléphone" required>
+        </label>
+        <button type="submit">Modifier le profil</button>
         <?php
     }
     ?>

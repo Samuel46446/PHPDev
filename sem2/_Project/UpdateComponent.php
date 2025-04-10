@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // first (imgblock1)
         $component = new Component($typeComposant.lcfirst($tutorialName).$numComposant, $desc, $code, $idModLoader);
 
-        RegistryEntry::buildComponentToBDD($component);
+        SwitchRegistry::updateComponentToBDD($_POST['component'], $component);
     }
     else
     {
@@ -84,22 +84,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </style>
 </head>
 <body>
-<h1>Forum - Modding Minecraft : Create Component</h1>
+<h1>Forum - Modding Minecraft : Update Component</h1>
 
-<form action="CreateComponent.php" method="POST">
+<form action="UpdateComponent.php" method="POST">
     <?php
     if (isset($_SESSION['sendingComponent'])) {
         if ($_SESSION['sendingComponent']) {
             echo "<p>✅ Vous avez créé le composant.</p>";
             echo "<div class=\"home\"><a href=\"index.php\" class=\"button-link\"><img src=\"textures/home_button.png\" alt=\"Home\" width=\"50\" height=\"50\"></a></div>";
-            echo "<div class=\"home\"><a href=\"CreateComponent.php\" class=\"button-link\"><img src=\"textures/retry.png\" alt=\"Retry\" width=\"50\" height=\"50\"></a></div>";
+            echo "<div class=\"home\"><a href=\"UpdateComponent.php\" class=\"button-link\"><img src=\"textures/retry.png\" alt=\"Retry\" width=\"50\" height=\"50\"></a></div>";
             unset($_SESSION['sendingComponent']);
         } else if ($_SESSION['sendingComponent'] === false) {
             echo "<p>❌ Le composant n'a pas pu être créé, veuillez réessayer.</p>";
-            echo "<a href=\"CreateComponent.php\">Réessayer</a>";
+            echo "<a href=\"UpdateComponent.php\">Réessayer</a>";
         }
     } else {
         ?>
+        <label>
+            <select name="component" id="component">
+                <?php
+                $currentComp = "Default";
+
+                foreach (RegistryEntry::getComponents() as $tuto) {
+                    $selected = ($currentComp === $tuto['cno']) ? "selected" : "";
+                    echo "<option value=\"" . htmlspecialchars($tuto['cno']) . "\" " . $selected . ">" . htmlspecialchars($tuto['cno']) . "</option>";
+                }
+
+                ?>
+            </select>
+        </label>
         <label>
             <select name="tutoriel" id="tutoriel">
                 <?php
@@ -154,7 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </option>
             </select>
         </label>
-        <button type="submit">Modifier le composant</button>
+        <button type="submit">Créer le composant</button>
         <?php
     }
     ?>

@@ -18,7 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $tutorial = new Tutorial($title, $version, $about, $description, $finalDesc);
 
-        RegistryEntry::buildTutorialToBDD($tutorial);
+        $id = AttributeFetcher::getTutorialIdByName($_POST['tutoriel']);
+        SwitchRegistry::updateTutorialToBDD($id, $tutorial);
     }
     else
     {
@@ -75,21 +76,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </style>
 </head>
 <body>
-<h1>Forum - Modding Minecraft : Create Tutorial</h1>
+<h1>Forum - Modding Minecraft : Update Tutorial</h1>
 
-<form action="CreateTutorial.php" method="POST">
+<form action="UpdateTutorial.php" method="POST">
     <?php
     if (isset($_SESSION['sendingTutorial'])) {
         if ($_SESSION['sendingTutorial']) {
             echo "<p>✅ Vous avez créé le tutoriel.</p>";
             echo "<div class=\"home\"><a href=\"index.php\" class=\"button-link\"><img src=\"textures/home_button.png\" alt=\"Home\" width=\"50\" height=\"50\"></a></div>";
-            echo "<div class=\"home\"><a href=\"CreateComponent.php" . $_SESSION['titleTutorial'] . "\" class=\"button-link\"><img src=\"textures/components.png\" alt=\"Home\" width=\"50\" height=\"50\"></a></div>";
+            echo "<div class=\"home\"><a href=\"UpdateTutorial.php" . $_SESSION['titleTutorial'] . "\" class=\"button-link\"><img src=\"textures/components.png\" alt=\"Home\" width=\"50\" height=\"50\"></a></div>";
         } else if ($_GET['sendingTutorial'] === false) {
             echo "<p>❌ Le tutoriel n'a pas pu être créé, veuillez réessayer.</p>";
-            echo "<a href=\"CreateTutorial.php\">Réessayer</a>";
+            echo "<a href=\"UpdateTutorial.php\">Réessayer</a>";
         }
     } else {
         ?>
+        <label>
+            <select name="tutoriel" id="tutoriel">
+                <?php
+                $currentTuto = "Default";
+
+                foreach (RegistryEntry::getTutorials() as $tuto) {
+                    $selected = ($currentTuto === $tuto['title']) ? "selected" : "";
+                    echo "<option value=\"" . htmlspecialchars($tuto['title']) . "\" " . $selected . ">" . htmlspecialchars($tuto['title']) . "</option>";
+                }
+
+                ?>
+            </select>
+        </label>
         <label>
             <input type="text" name="title" placeholder="Titre du tutoriel" required>
         </label>

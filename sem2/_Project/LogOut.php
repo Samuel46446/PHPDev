@@ -1,6 +1,6 @@
 <?php
 session_start();
-include_once "Main.php";
+include_once "Tutorial.php";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!empty($_POST["username"]) && !empty($_POST["password"])) {
@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $userFound = false;
 
-        foreach (Main::getAllUsers() as $user) {
+        foreach (RegistryEntry::getUsers() as $user) {
             if ($user['name'] === $username && $user['password'] === $password) {
                 $_SESSION['user_id'] = $user['uno'];
                 $_SESSION['username'] = $user['name'];

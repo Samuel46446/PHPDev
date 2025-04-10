@@ -104,7 +104,7 @@ if(isset($_GET["action"]) == "inscription")
 </form>
 
 <p><?php
-    include_once "Main.php";
+    include_once "Tutorial.php";
 
     if (isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["password"])  && isset($_POST["telephone"])) {
 
@@ -114,9 +114,10 @@ if(isset($_GET["action"]) == "inscription")
             $password = $_POST['password']; // Attention : à hacher avant stockage en BDD !
             $telephone = $_POST['telephone'];
 
-            if(Main::isUniqueUser($username, $email))
+            if(RegistryEntry::isUniqueUser($username, $email))
             {
-                echo Main::addUsers($username, $email, $password, $telephone);
+                $user = new User($username, $email, $password, $telephone);
+                echo RegistryEntry::buildUserToBDD($user);
             }
             else
             {
@@ -132,17 +133,6 @@ if(isset($_GET["action"]) == "inscription")
     {
         echo "Veuillez remplir tous les champs !";
     }
-//if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Récupérer les valeurs du formulaire
-
-
-//    if(Main::isUniqueUser($username, $email))
-//    {
-//    }
-//    else
-//    {
-//        echo "Le nom ou l'email et déjà lié à un compte !";
-//    }
 
 ?></p>
 

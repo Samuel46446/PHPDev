@@ -74,7 +74,7 @@ CREATE TABLE LoaderTuto(
 INSERT INTO loaders(lno, name, icon) VALUES (1, 'forge', 'logo_forge');
 INSERT INTO loaders(lno, name, icon) VALUES (2, 'fabric', 'logo_fabric');
 INSERT INTO loaders(lno, name, icon) VALUES (3, 'neoforge', 'logo_neoforge');
-INSERT INTO loaders(lno, name, icon) VALUES (4, 'default', 'logo_default');
+INSERT INTO loaders(lno, name, icon) VALUES (4, 'minecraft', 'logo_minecraft');
 
 INSERT INTO Users(name, email, password, phone) VALUES ('GarsDexemple', 'garsexemple@gmail.com', 'exemple', '05002155');
 INSERT INTO Users(name, email, password, phone) VALUES ('Sam', 'sam@gmail.com', 'spacetoad', '06902848');

@@ -1,19 +1,33 @@
 <?php
-include "Main.php";
+include_once "Main.php";
+include_once "Tutorial.php";
 
-$tuto = $_GET['tuto'] != null ? $_GET['tuto'] : "Bloc";
-$setTuto = $_GET['tuto'] != null ? $_GET['tuto'] : "Bloc";
-$modLoader= $_GET['modloader'] != null ? $_GET['modloader'] : "forge";
-$setTuto1 = lcfirst($setTuto); //"bloc";
+if(!isset($_GET['tuto'])) {
+    $_GET['tuto'] = "Bloc";
+}
 
-$tabTuto = Main::getTutorialFromName($setTuto);
-$modLoaderID = Main::getLoaderIdByName($_GET['modloader'] != null ? $_GET['modloader'] : "forge");
+if(!isset($_GET['modLoader'])) {
+    $_GET['modLoader'] = "forge";
+}
 
-$icon = Main::getLogoLoaderById($modLoaderID);
+$tuto = $_GET['tuto'] ?? "Bloc";
+$modLoader = $_GET['modLoader'] ?? "forge";
+$minTuto = lcfirst($tuto);
 
-$tabComponents = Main::getComponentsByTutorialNameAndLoader($modLoaderID, $setTuto1);
-$tabMinecraftComponents = Main::getComponentsByTutorialNameAndLoader(4, $setTuto1);
+$tabTuto = AttributeFetcher::getTutorialByName($tuto);
+$modLoaderID = AttributeFetcher::getLoaderIdByName($_GET['modLoader'] != null ? $_GET['modLoader'] : "forge");
 
+$icon = AttributeFetcher::getLogoLoaderById($modLoaderID);
+
+$tabComponents = RegistryEntry::getComponentsByTutorialNameAndLoader($modLoaderID, lcfirst($tuto));
+$tabMinecraftComponents = RegistryEntry::getComponentsByTutorialNameAndLoader(4, lcfirst($tuto));
+
+//error_reporting(E_ALL);
+//ini_set('display_errors', 1);
+//print_r($tabTuto);
+//print_r($tabComponents);
+//print_r($tabMinecraftComponents);
+//print_r($_GET)
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -77,7 +91,7 @@ $tabMinecraftComponents = Main::getComponentsByTutorialNameAndLoader(4, $setTuto
    </style>
 </head>
 <body>
-<select name="modLoader" id="modloaders">
+<select name="modLoader" id="modLoader">
     <option value="forge" <?= ($modLoader == "forge") ? "selected" : ""; ?>>
         forge
     </option>
@@ -87,26 +101,26 @@ $tabMinecraftComponents = Main::getComponentsByTutorialNameAndLoader(4, $setTuto
     <option value="neoforge" <?= ($modLoader == "neoforge") ? "selected" : ""; ?>>
         neoforge
     </option>
-</select><select name="tuto" id="tutos">
+</select>
+<select name="tuto" id="tuto">
     <?php
-    include_once "Tutorial.php";
 
     $currentTuto = $_GET['tuto'] ?? "Bloc";
 
-    foreach (Tutorials::getTutorials() as $tuto) {
+    foreach (RegistryEntry::getTutorials() as $tuto) {
         $selected = ($currentTuto === $tuto['title']) ? "selected" : "";
         echo "<option value=\"" . htmlspecialchars($tuto['title']) . "\" " . $selected . ">" . htmlspecialchars($tuto['title']) . "</option>";
     }
     ?>
 </select>
 <script>
-    document.getElementById('modloaders').addEventListener('change', function() {
+    document.getElementById('modLoader').addEventListener('change', function() {
         const params = new URLSearchParams(window.location.search);
-        params.set('modloader', this.value);
+        params.set('modLoader', this.value);
         window.location.search = params.toString();
     });
 
-    document.getElementById('tutos').addEventListener('change', function() {
+    document.getElementById('tuto').addEventListener('change', function() {
         const params = new URLSearchParams(window.location.search);
         params.set('tuto', this.value);
         window.location.search = params.toString();
@@ -117,13 +131,13 @@ $tabMinecraftComponents = Main::getComponentsByTutorialNameAndLoader(4, $setTuto
         <h1><?php echo $tabTuto['about'];?></h1>
         <p><?php echo $tabTuto['description']; ?>
             <?php
-            if($_GET['modloader'] != null)
+            if($_GET['modLoader'] != null)
             {
-                if($_GET['modloader'] == "fabric")
+                if($_GET['modLoader'] == "fabric")
                 {
                     echo "la fabric api";
                 }
-                else if($_GET['modloader'] == "neoforge")
+                else if($_GET['modLoader'] == "neoforge")
                 {
                     echo "l'api neoforge";
                 }
@@ -142,17 +156,17 @@ $tabMinecraftComponents = Main::getComponentsByTutorialNameAndLoader(4, $setTuto
 
             foreach ($tabComponents as $component) {
 
-                if($component['cno'] == 'java' . $setTuto1 . '1')
+                if($component['cno'] == "java" . lcfirst($tabTuto['title']) . "1")
                 {
-                    echo Main::getBaliseFromCno($component['cno'], $component['description'], $component['code'], $component['lno']);
+                    echo RegistryEntry::getBaliseFromCno($component['cno'], $component['description'], $component['code'], $component['lno']);
                 }
             }
 
             foreach ($tabComponents as $component) {
 
-                if($component['cno'] != 'java'. $setTuto1 .'1')
+                if($component['cno'] != "java". lcfirst($tabTuto['title']) ."1")
                 {
-                    echo Main::getBaliseFromCno($component['cno'], $component['description'], $component['code'], $component['lno']);
+                    echo RegistryEntry::getBaliseFromCno($component['cno'], $component['description'], $component['code'], $component['lno']);
                 }
             }
             ?>
@@ -160,7 +174,7 @@ $tabMinecraftComponents = Main::getComponentsByTutorialNameAndLoader(4, $setTuto
             <?php
 
             foreach ($tabMinecraftComponents as $component) {
-                echo Main::getBaliseFromCno($component['cno'], $component['description'], $component['code'], $component['lno']);
+                echo RegistryEntry::getBaliseFromCno($component['cno'], $component['description'], $component['code'], $component['lno']);
             }
             ?>
         </ul>
