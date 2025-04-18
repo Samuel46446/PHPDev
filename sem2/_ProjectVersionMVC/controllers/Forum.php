@@ -17,16 +17,16 @@ if (isset($_SESSION['sendingPost'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forum - Modding Minecraft</title>
-    <link rel="icon" href="textures/logo_minecraft.png" type="image/x-icon">
+    <title>Modding Minecraft - Forum</title>
+    <link rel="icon" href="../textures/logo_minecraft.png" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
-    <link rel="stylesheet" type="text/css" href="css/title.css">
+    <link rel="stylesheet" type="text/css" href="../css/title.css">
 </head>
     <body>
-        <h1 class="h1Tuto">Forum - Modding Minecraft</h1>
-        <?php echo "<div class=\"homeTuto\"><a href=\"index.php\" class=\"button-link\"><img src=\"textures/home_button.png\" alt=\"Home\" width=\"50\" height=\"50\"></a></div>"; ?>
+        <h1 class="h1Tuto">Modding Minecraft - Forum</h1>
+        <?php echo "<div class=\"homeTuto\"><a href=\"../index.php\" class=\"button-link\"><img src=\"../textures/home_button.png\" alt=\"Lien vers le menu d'accueil\" width=\"50\" height=\"50\"></a></div>"; ?>
         <table>
             <thead>
                 <tr>
@@ -37,15 +37,15 @@ if (isset($_SESSION['sendingPost'])) {
                     <th>Auteur</th>
                     <th>
                         <div class="ForumButton">
-                            <a href="insert/CreatePost.php"> Créer un post 📩 </a>
+                            <a title="Lien pour créer un post" href="../database/insert/CreatePost.php"> Créer un post 📩 </a>
                         </div>
                     </th>
                 </tr>
             </thead>
             <tbody>
             <?php
-                include_once "registries/RegistryEntry.php";
-                include_once "registries/AttributeFetcher.php";
+                include_once "../models/RegistryEntry.php";
+                include_once "../models/AttributeFetcher.php";
 
                 foreach (RegistryEntry::getPosts() as $post) {
                     echo "<tr id=\"post\">";
