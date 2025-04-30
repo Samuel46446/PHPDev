@@ -1,0 +1,238 @@
+.user_icon {
+    width: 100px;
+    height: 100px;
+    float: right;
+    margin-right: 50px;
+}
+
+.createButton {
+    text-decoration: none;
+    cursor: pointer;
+    color : white;
+    background-color: darkorchid;
+    border-color: lavender;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-family: Arial, sans-serif; /* Utiliser la même police que le bouton de base */
+    display: block;
+    margin: 10px auto;
+    text-align: center;
+    width: fit-content;
+}
+
+.deleteButton {
+    text-decoration: none;
+    cursor: pointer;
+    color : white;
+    background-color: red;
+    border-color: lavender;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-family: Arial, sans-serif; /* Utiliser la même police que le bouton de base */
+    display: block;
+    margin: 10px auto;
+    text-align: center;
+    width: fit-content;
+}
+
+.modifyButton {
+    text-decoration: none;
+    cursor: pointer;
+    color : white;
+    background-color: aqua;
+    border-color: lavender;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-family: Arial, sans-serif; /* Utiliser la même police que le bouton de base */
+    display: block;
+    margin: 10px auto;
+    text-align: center;
+    width: fit-content;
+}
+
+.selectButton {
+    text-decoration: none;
+    cursor: pointer;
+    color : white;
+    background-color: #38b33e;
+    border-color: lavender;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-family: Arial, sans-serif; /* Utiliser la même police que le bouton de base */
+    display: block;
+    margin: 10px auto;
+    text-align: center;
+    width: fit-content;
+}
+
+.logButtons {
+    text-decoration: none;
+    cursor: pointer;
+    color : white;
+    background-color: #38b33e;
+    border-color: lavender;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-family: Arial, sans-serif; /* Utiliser la même police que le bouton de base */
+    display: inline-block;
+    margin: 10px auto;
+    text-align: center;
+    width: fit-content;
+}
+
+.ForumButton {
+    text-decoration: none;
+    cursor: pointer;
+    color : white;
+    background-color: #38b33e;
+    border-color: lavender;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-family: Arial, sans-serif;
+    display: block;
+    margin: 10px auto;
+    text-align: center;
+    width: fit-content;
+}
+
+.h1TutoCenter {
+    color: #5CEB95;
+    display: block;
+    margin: 10px auto;
+    text-align: center;
+    width: fit-content;
+}
+
+.pCopyrightCenter {
+    color: white;
+    display: block;
+    margin: 10px auto;
+    text-align: center;
+    width: fit-content;
+}
+
+form {
+    display: flex;
+    flex-direction: column; /* Aligne les éléments verticalement */
+    align-items: center; /* Centre les éléments horizontalement */
+    gap: 15px; /* Ajoute un espacement entre les éléments */
+}
+
+.titleIndex {
+    color: white;
+    align-content: center;
+    text-align: center;
+}
+
+body {
+    background-color: rgb(32, 29, 29);
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+.h1Tuto {
+    color: #5CEB95;
+    margin-left: 20px;
+}
+
+.h1VersionTuto {
+    color: #F525E3;
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 20px; /* Pousse l'élément vers la droite */
+}
+
+.h2Tuto {
+    color: #1FC946;
+    margin-left: 20px;
+}
+
+.pTuto {
+    color: #F525E3;
+    margin-left: 40px;
+}
+
+.pCopyright {
+    color: white;
+    margin-left: 20px;
+}
+
+select {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    margin-left: 20px;
+    margin-bottom: 20px;
+}
+
+.language-java {
+    border-radius: 10px;
+}
+.language-json {
+    border-radius: 10px;
+}
+
+.buttonDisco {
+    resize: block;
+    padding: 10px;
+    margin-top: 10px;
+    display: block;
+}
+
+.homeTuto{
+    margin-top: 30px;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    background-color: #bd31d3;
+    float: right;
+    border-radius: 5px;
+    top: 10%;
+    left: 80%;
+}
+
+.home{
+    margin-top: 20px;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    background-color: #bd31d3;
+    border-radius: 5px;
+}
+
+#post{
+    background-color: #0000;
+    color: #ffffff;
+}
+
+table {
+    background-color: #0000;
+    align-items: center;
+}
+
+th{
+    border: 1px solid #ffffff;
+    color: #5CEB95;
+    align-items: center;
+    padding: 10px;
+}
+
+tr{
+    color: #F525E3;
+    align-items: center;
+    max-width: 100%;
+}
+
+td{
+    border: 1px solid #ffffff;
+    padding: 10px;
+}
