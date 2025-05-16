@@ -38,8 +38,11 @@ class Commune
     {
         $secteursEV = [];
         foreach ($this->lesSecteurs as $secteur) {
-            if ($secteur->getEspaceVert()) {
-                $secteursEV[] = $secteur;
+            if($secteur instanceof Secteur)
+            {
+                if ($secteur->getEspaceVert()) {
+                    $secteursEV[] = $secteur;
+                }
             }
         }
         return $secteursEV;
@@ -47,33 +50,34 @@ class Commune
 
     public function volumeVannes(): int
     {
-        return 0;
+        $volTotalVannes = 0;
+        foreach ($this->lesSecteurs as $secteur) {
+            foreach ($secteur->getLesBranchements() as $branchement) {
+                if($branchement instanceof Vanne)
+                {
+                    $volTotalVannes += $branchement->conso();
+                }
+            }
+        }
+        return $volTotalVannes;
     }
 
     public function perte(): int
     {
         $usagers = [];
-        $vannes = [];
         foreach ($this->lesSecteurs as $secteur) {
             foreach ($secteur->getLesBranchements() as $branchement) {
                 if($branchement instanceof Usager)
                 {
                     $usagers[] = $branchement;
                 }
-                else
-                {
-                    $vannes[] = $branchement;
-                }
             }
         }
 
-        $volTotalVannes = 0;
+        $volTotalVannes = $this->volumeVannes();
         $consommationUsagers = 0;
         foreach ($usagers as $usager) {
             $consommationUsagers += $usager->conso();
-        }
-        foreach ($vannes as $vanne) {
-            $volTotalVannes += $vanne->conso();
         }
 
         return $volTotalVannes - $consommationUsagers;
@@ -98,7 +102,7 @@ class Commune
         $perte = $this->perte();
 
         if ($volTotalVannes === 0) {
-            return 0; // Évite une division par zéro
+            return 0;
         }
 
         $pourcentagePertes = ($perte / $volTotalVannes) * 100;
