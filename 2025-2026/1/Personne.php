@@ -8,11 +8,22 @@ class Personne implements XMLable
     private string $prenom;
     private string $login;
 
+    protected static int $nbInstance = 0;
+
     public function __construct(string $nom, string $prenom, string $login)
     {
         $this->nom = $nom;
         $this->prenom = $prenom;
         $this->login = $login;
+        self::$nbInstance++;
+    }
+
+   /**
+    * @return int
+    */
+   public static function getNbInstance(): int
+    {
+        return self::$nbInstance;
     }
 
     public function getNom(): string
